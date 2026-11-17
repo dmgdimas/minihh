@@ -2,6 +2,8 @@ package com.dmgdimas.minihh.service;
 
 import com.dmgdimas.minihh.exception.VacancyNotFoundException;
 import com.dmgdimas.minihh.model.Vacancy;
+import com.dmgdimas.minihh.repository.InMemoryVacancyRepository;
+import com.dmgdimas.minihh.repository.VacancyRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,12 +17,13 @@ class VacancyServiceTest {
 
     private static final Vacancy VACANCY_1 = new Vacancy(1L, "Java dev", "hh.ru", new BigDecimal("150000"));
     private static final Vacancy VACANCY_2 = new Vacancy(2L, "Backend dev", "Yandex", new BigDecimal("300000"));
+    private static final VacancyRepository repo = new InMemoryVacancyRepository(List.of(VACANCY_1, VACANCY_2));
 
     @Test
     @DisplayName("findAll возвращает все переданные вакансии")
     void findAll_returnsAllVacancies() {
         // given
-        VacancyService service = new VacancyService(List.of(VACANCY_1, VACANCY_2));
+        VacancyService service = new VacancyService(repo);
 
         // when
         List<Vacancy> result = service.findAll();
@@ -34,7 +37,7 @@ class VacancyServiceTest {
     @DisplayName("findById с существующим id возвращает вакансию")
     void findById_existingId_returnsVacancy() {
         // given
-        VacancyService service = new VacancyService(List.of(VACANCY_1, VACANCY_2));
+        VacancyService service = new VacancyService(repo);
 
         // when
         Vacancy found = service.findById(2L);
@@ -47,7 +50,7 @@ class VacancyServiceTest {
     @DisplayName("findById с несуществующим id бросает VacancyNotFoundException")
     void findById_nonExistingId_throwsVacancyNotFoundException() {
         // given
-        VacancyService service = new VacancyService(List.of(VACANCY_1));
+        VacancyService service = new VacancyService(repo);
 
         // when & then
         assertThatThrownBy(() -> service.findById(99L))
@@ -59,7 +62,7 @@ class VacancyServiceTest {
     @DisplayName("findAll на пустом списке возвращает пустой список")
     void findAll_emptyList_returnsEmptyList() {
         // given
-        VacancyService service = new VacancyService(List.of());
+        VacancyService service = new VacancyService(new InMemoryVacancyRepository(List.of()));
 
         // when
         List<Vacancy> result = service.findAll();
