@@ -1,5 +1,6 @@
 package com.dmgdimas.minihh.service;
 
+import com.dmgdimas.minihh.exception.VacancyNotFoundException;
 import com.dmgdimas.minihh.model.Vacancy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
