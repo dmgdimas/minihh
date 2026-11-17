@@ -11,14 +11,14 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 
 public class InMemoryVacancyRepositoryTest {
-    private Vacancy VAC1 = new Vacancy(1L, "Java dev", "hh.ru", new BigDecimal("130000"));
-    private Vacancy VAC2 = new Vacancy(2L, "C++ dev", "Yandex.ru", new BigDecimal("270000"));
+    private Vacancy V1 = new Vacancy(1L, "Java dev", "hh.ru", new BigDecimal("130000"));
+    private Vacancy V2 = new Vacancy(2L, "C++ dev", "Yandex.ru", new BigDecimal("270000"));
 
     @Test
     @DisplayName("findAll возвращает все сохранённые вакансии")
     void findAll_returnsAll() {
-        var repo = new InMemoryVacancyRepository(List.of(VAC1, VAC2));
-        assertThat(repo.findAll()).containsExactly(VAC1, VAC2);
+        var repo = new InMemoryVacancyRepository(List.of(V1, V2));
+        assertThat(repo.findAll()).containsExactly(V1, V2);
     }
 
     @Test

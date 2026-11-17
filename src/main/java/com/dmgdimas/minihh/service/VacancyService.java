@@ -2,26 +2,25 @@ package com.dmgdimas.minihh.service;
 
 import com.dmgdimas.minihh.exception.VacancyNotFoundException;
 import com.dmgdimas.minihh.model.Vacancy;
+import com.dmgdimas.minihh.repository.VacancyRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class VacancyService {
-    private final List<Vacancy> vacancies;
+    private final VacancyRepository repository;
 
-    public VacancyService(List<Vacancy> vacancies){
-        this.vacancies = vacancies;
+    public VacancyService(VacancyRepository repository){
+        this.repository = repository;
     }
 
     public List<Vacancy> findAll() {
-        return vacancies;
+        return repository.findAll();
     }
 
     public Vacancy findById(Long id){
-        return vacancies.stream()
-                .filter(v -> v.id().equals(id))
-                .findFirst()
+        return repository.findById(id)
                 .orElseThrow(() -> new VacancyNotFoundException(id));
     }
 }
