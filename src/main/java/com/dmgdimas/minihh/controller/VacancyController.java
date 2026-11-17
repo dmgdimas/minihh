@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -17,15 +18,28 @@ public class VacancyController {
         new Vacancy(2L, "Backend Developer", "Яндекс", new BigDecimal("250000")),
         new Vacancy(3L, "Spring Intern", "Тинькофф", new BigDecimal("80000"))
     );
+
+    private static final BigDecimal SALARY_THRESHOLD = new BigDecimal("100000");
+
     @GetMapping
     public List<Vacancy> vacancies() {
         return vacancies;
     }
+
     @GetMapping("/{id}")
     public Vacancy getVacancyById(@PathVariable Long id){
         return vacancies.stream()
                 .filter(v -> v.id().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Vacancy not found with id: " + id));
+    }
+
+    @GetMapping("/titles")
+    public List<String> getRichVacancyTitles(){
+        return vacancies.stream()
+                .filter(v -> v.salary().compareTo(SALARY_THRESHOLD) > 0)
+                .sorted(Comparator.comparing(Vacancy::title))
+                .map(Vacancy::title)
+                .toList();
     }
 }
