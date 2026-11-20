@@ -18,7 +18,8 @@ class VacancyServiceTest {
     private static final Vacancy VACANCY_1 = new Vacancy(1L, "Java dev", "hh.ru", new BigDecimal("150000"));
     private static final Vacancy VACANCY_2 = new Vacancy(2L, "Backend dev", "Yandex", new BigDecimal("300000"));
     private static final VacancyRepository repo = new InMemoryVacancyRepository(List.of(VACANCY_1, VACANCY_2));
-
+    private static final Vacancy VACANCY_POOR =
+            new Vacancy(3L, "Spring Intern", "Тинькофф", new BigDecimal("80000"));
     @Test
     @DisplayName("findAll возвращает все переданные вакансии")
     void findAll_returnsAllVacancies() {
@@ -69,5 +70,15 @@ class VacancyServiceTest {
 
         // then
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("findRichVacancyTitles фильтрует по порогу, сортирует по title и мапит в строки")
+    void findRichVacancyTitles_filtersSortsAndMaps() {
+        VacancyService service = new VacancyService(new InMemoryVacancyRepository(
+                List.of(VACANCY_1, VACANCY_2, VACANCY_POOR)));
+
+        assertThat(service.findRichVacancyTitles())
+                .containsExactly("Backend dev", "Java dev");
     }
 }
