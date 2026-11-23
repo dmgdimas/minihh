@@ -61,13 +61,14 @@ class VacancyControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/vacancies/{id} с несуществующим id возвращает 404 с JSON-телом")
-    void getVacancyById_nonExistingId_returns404WithJson() throws Exception {
+    @DisplayName("GET /api/vacancies/{id} с несуществующим id возвращает problem+json 404")
+    void getVacancyById_nonExistingId_returnsProblemDetail() throws Exception {
         mockMvc.perform(get("/api/vacancies/99"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.error").value("Not Found"))
-                .andExpect(jsonPath("$.message").value("Vacancy not found with id: 99"))
-                .andExpect(jsonPath("$.path").value("/api/vacancies/99"));
+                .andExpect(jsonPath("$.title").value("Vacancy Not Found"))
+                .andExpect(jsonPath("$.detail").value("Vacancy not found with id: 99"))
+                .andExpect(jsonPath("$.instance").value("/api/vacancies/99"))
+                .andExpect(jsonPath("$.errorCode").value("VACANCY_NOT_FOUND"));
     }
 }
