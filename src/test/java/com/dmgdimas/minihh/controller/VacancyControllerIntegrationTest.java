@@ -19,6 +19,7 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -70,5 +71,14 @@ class VacancyControllerIntegrationTest {
                 .andExpect(jsonPath("$.detail").value("Vacancy not found with id: 99"))
                 .andExpect(jsonPath("$.instance").value("/api/vacancies/99"))
                 .andExpect(jsonPath("$.errorCode").value("VACANCY_NOT_FOUND"));
+    }
+
+    @Test
+    @DisplayName("ошибка фреймворка (кривой id) тоже отдаётся как problem+json")
+    void frameworkError_returnsProblemDetail() throws Exception {
+        mockMvc.perform(get("/api/vacancies/abc"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType("application/problem+json"))
+                .andExpect(jsonPath("$.status").value(400));
     }
 }
